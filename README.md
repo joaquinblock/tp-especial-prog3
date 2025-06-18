@@ -8,4 +8,5 @@
 <h3>Joaquin Block</h3>
 <h4>joaquin.block@gmail.com</h4>
 
-<h5>Informacion importante: A la hora de abrir el proyecto es importante hacerlo en la carpeta raiz, ya que si no el programa no encontrara el archivo datos.txt donde se encuentran las maquinas y las piezas a producir</h5>
+<h3>Informacion importante:</h3>
+<h5>A la hora de abrir el proyecto es importante hacerlo en la carpeta raiz, ya que si no el programa no encontrara el archivo datos.txt donde se encuentran las maquinas y las piezas a producir</h5>
