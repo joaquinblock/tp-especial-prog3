@@ -2,6 +2,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/*
+ * Estrategia Greedy:
+ * - Los candidatos son las máquinas disponibles, cada una con una cierta capacidad de producción.
+ * - Se ordenan de forma descendente según la cantidad de piezas que producen, priorizando las más productivas.
+ * - En cada paso, se elige la máquina más productiva que no exceda el objetivo de piezas a producir.
+ * - Si ninguna máquina permite avanzar sin pasarse, se toma la menos productiva para intentar alcanzar el objetivo aunque se lo exceda.
+ * - La estrategia no garantiza una solución óptima, pero busca una solución rápida y razonable.
+ * - Se contabiliza la cantidad de candidatos considerados para evaluar la eficiencia.
+ */
+
 public class Greedy {
     private List<Maquina> maquinas;
     private Solucion solucion;
@@ -18,7 +28,8 @@ public class Greedy {
         imprimir();
     }
 
-    // Este método calcula la mejor secuencia de máquinas usando una estrategia golosa (greedy)
+    // Este método calcula la mejor secuencia de máquinas usando una estrategia
+    // golosa (greedy)
     private void greedy(int objetivo) {
         // Primero ordeno las máquinas de mayor a menor según cuántas piezas producen.
         // Así me aseguro de usar siempre primero la más productiva.
@@ -42,7 +53,8 @@ public class Greedy {
                 index++;
             }
 
-            // Si ya probé todas las máquinas y todavía no llegué, uso la más chica aunque me pase
+            // Si ya probé todas las máquinas y todavía no llegué, uso la más chica aunque
+            // me pase
             // porque no me queda otra si quiero llegar al objetivo
             if (index == this.maquinas.size() && piezasAcumuladas < objetivo) {
                 Maquina ultima = this.maquinas.get(this.maquinas.size() - 1);
@@ -56,7 +68,6 @@ public class Greedy {
         this.solucion.setMejorCantidadMaquinas(secuencia.size());
         this.solucion.setMejorSecuencia(secuencia);
     }
-
 
     // Suma las piezas de la solución para mostrarlas
     private int calcularTotalPiezas() {
@@ -89,6 +100,3 @@ public class Greedy {
         System.out.println("Cantidad de candidatos considerados: " + candidatosConsiderados);
     }
 }
-
-
-
