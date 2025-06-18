@@ -1,9 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Estado {
     private List<Maquina> secuencia;
     private int piezasAcumuladas;
