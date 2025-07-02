@@ -1,3 +1,5 @@
+package modelo;
+
 public class Maquina implements Comparable<Maquina> {
     private String nombre;
     private int piezas;

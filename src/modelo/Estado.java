@@ -1,3 +1,5 @@
+package modelo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +26,12 @@ public class Estado {
 
     public List<Maquina> getSecuencia() {
         List<Maquina> tmp = new ArrayList<>();
-        for (Maquina m : this.secuencia){
+        for (Maquina m : this.secuencia) {
             tmp.add(m);
         }
         return tmp;
     }
+
     public int getPiezasAcumuladas() {
         return piezasAcumuladas;
     }
@@ -37,5 +40,3 @@ public class Estado {
         return secuencia.size();
     }
 }
-
-

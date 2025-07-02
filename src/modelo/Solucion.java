@@ -1,6 +1,7 @@
-import java.util.List;
+package modelo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Solucion {
     private List<Maquina> mejorSecuencia;
@@ -22,7 +23,7 @@ public class Solucion {
 
     public List<Maquina> getMejorSecuencia() {
         List<Maquina> tmp = new ArrayList<>();
-        for (Maquina m : this.mejorSecuencia){
+        for (Maquina m : this.mejorSecuencia) {
             tmp.add(m);
         }
         return tmp;
@@ -34,7 +35,7 @@ public class Solucion {
 
     public void setMejorSecuencia(List<Maquina> secuencia) {
         mejorSecuencia.clear();
-        for(Maquina m : secuencia){
+        for (Maquina m : secuencia) {
             this.mejorSecuencia.add(m);
         }
     }
@@ -43,5 +44,3 @@ public class Solucion {
         this.mejorCantidadMaquinas = mejorCantidadMaquinas;
     }
 }
-
-
