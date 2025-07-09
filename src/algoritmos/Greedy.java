@@ -53,11 +53,10 @@ public class Greedy {
                     secuencia.add(maquina);
                     piezasAcumuladas += maquina.getPiezas();
                     maquinaEncontrada = true;
-                    break; // Tomar la primera (más productiva) que quepa
+                    break;
                 }
             }
 
-            // Si no encontramos ninguna máquina que quepa, no hay solución
             if (!maquinaEncontrada) {
                 break;
             }

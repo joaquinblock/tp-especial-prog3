@@ -10,8 +10,9 @@ import modelo.Solucion;
  * Estrategia Backtracking:
  * - Explora todas las combinaciones posibles de máquinas sin repetición de orden ([M1,M2] pero no [M2,M1])
  * - Aplica podas eficientes:
- *   1. Evita superar el objetivo de piezas
- *   2. Evita continuar si no puede mejorar la mejor solución actual
+ *    Evita continuar si no puede mejorar la mejor solución actual
+ * - Restriccion:
+ *    Evita superar el objetivo de piezas
  * - Contabiliza solo los estados realmente explorados (después de las podas)
  */
 
@@ -43,16 +44,17 @@ public class Backtracking {
             Maquina m = this.maquinas.get(i);
             int nuevasPiezas = estado.getPiezasAcumuladas() + m.getPiezas();
 
-            // Poda 1: No superar el objetivo
+            // Restriccion: No superar el objetivo
             if (nuevasPiezas > objetivo) {
                 continue;
             }
 
-            // Poda 2: No puede mejorar la mejor solución actual
+            // Poda: No puede mejorar la mejor solución actual
             // Se suma +1 porque estamos por agregar una nueva máquina al estado actual.
             // Si al agregarla ya igualamos o superamos la mejor cantidad de máquinas usada
-            if (solucion.getMejorCantidadMaquinas() != Integer.MAX_VALUE &&
-                    estado.getCantidadMaquinasUsadas() + 1 >= solucion.getMejorCantidadMaquinas()) {
+            if (solucion.getMejorCantidadMaquinas() != Integer.MAX_VALUE // solucion.mejorCantidadMaquinas se inicializa
+                                                                         // con Integer.MAX_VALUE
+                    && estado.getCantidadMaquinasUsadas() + 1 >= solucion.getMejorCantidadMaquinas()) {
                 continue;
             }
 
