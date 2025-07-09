@@ -8,12 +8,13 @@ import modelo.Maquina;
 import modelo.Solucion;
 
 /*
- * Estrategia Greedy:
+ * Estrategia Greedy Corregida:
  * - Ordena las máquinas de mayor a menor capacidad de producción.
  * - En cada paso selecciona la máquina más productiva que no exceda las piezas faltantes.
+ * - Permite reutilización de máquinas.
  * - Solo devuelve solución si se alcanza exactamente el número de piezas requerido.
  * - Si no es posible alcanzar exactamente el objetivo, no devuelve solución.
- * - Contabiliza correctamente los candidatos considerados.
+ * - Evita bucles infinitos y contabiliza correctamente los candidatos considerados.
  */
 
 public class Greedy {
@@ -38,36 +39,37 @@ public class Greedy {
 
         List<Maquina> secuencia = new ArrayList<>();
         int piezasAcumuladas = 0;
-        int index = 0;
-        boolean solucionExacta = false;
 
-        while (index < this.maquinas.size() && !solucionExacta) {
-            Maquina maquinaActual = this.maquinas.get(index);
-            this.candidatosConsiderados++;
+        while (piezasAcumuladas < objetivo) {
+            boolean maquinaEncontrada = false;
+            int piezasFaltantes = objetivo - piezasAcumuladas;
 
-            // Verificar si al agregar esta máquina alcanzamos exactamente el objetivo
-            if (piezasAcumuladas + maquinaActual.getPiezas() == objetivo) {
-                secuencia.add(maquinaActual);
-                piezasAcumuladas += maquinaActual.getPiezas();
-                solucionExacta = true;
+            // Buscar la máquina más productiva que no exceda las piezas faltantes
+            for (int i = 0; i < this.maquinas.size(); i++) {
+                Maquina maquina = this.maquinas.get(i);
+                this.candidatosConsiderados++;
+
+                if (maquina.getPiezas() <= piezasFaltantes) {
+                    secuencia.add(maquina);
+                    piezasAcumuladas += maquina.getPiezas();
+                    maquinaEncontrada = true;
+                    break; // Tomar la primera (más productiva) que quepa
+                }
             }
-            // Verificar si podemos agregar la máquina sin pasarnos del objetivo
-            else if (piezasAcumuladas + maquinaActual.getPiezas() < objetivo) {
-                secuencia.add(maquinaActual);
-                piezasAcumuladas += maquinaActual.getPiezas();
-                // Reiniciamos el índice para considerar todas las máquinas nuevamente
-                index = 0;
-            } else {
-                // Probamos con la siguiente máquina menos productiva
-                index++;
+
+            // Si no encontramos ninguna máquina que quepa, no hay solución
+            if (!maquinaEncontrada) {
+                break;
             }
         }
 
         // Solo actualizamos la solución si encontramos una combinación exacta
-        if (solucionExacta) {
+        if (piezasAcumuladas == objetivo) {
             this.solucion.setMejorCantidadMaquinas(secuencia.size());
             this.solucion.setMejorSecuencia(secuencia);
         }
+        // Si no se alcanza exactamente el objetivo, no se devuelve solución
+        // (la solución permanece vacía)
     }
 
     private int calcularTotalPiezas() {
@@ -82,26 +84,31 @@ public class Greedy {
     }
 
     private void imprimir() {
-        System.out.println("\n<----Greedy---->");
+        StringBuilder sb = new StringBuilder();
+        List<Maquina> secuencia = this.solucion.getMejorSecuencia();
+        int totalPiezas = calcularTotalPiezas();
+        int totalMaquinas = this.solucion.getMejorCantidadMaquinas();
 
-        if (solucion.getMejorSecuencia().isEmpty()) {
-            System.out.println("No se encontró solución exacta");
+        sb.append("\n╔════════════════════════════════════╗\n");
+        sb.append("║         RESULTADO GREEDY           ║\n");
+        sb.append("╚════════════════════════════════════╝\n");
+
+        if (secuencia.isEmpty()) {
+            sb.append("No se encontró una solución exacta.\n");
         } else {
-            System.out.print("Secuencia de máquinas: [");
-            List<Maquina> secuencia = this.solucion.getMejorSecuencia();
+            sb.append("Secuencia de máquinas: [");
             for (int i = 0; i < secuencia.size(); i++) {
-                System.out.print(secuencia.get(i).getNombre());
-                if (i < secuencia.size() - 1) {
-                    System.out.print(",");
-                }
+                sb.append(secuencia.get(i).getNombre());
+                if (i < secuencia.size() - 1)
+                    sb.append(", ");
             }
-            System.out.println("]");
+            sb.append("]\n");
 
-            int totalPiezas = calcularTotalPiezas();
-            System.out.println("Solución obtenida: cantidad de piezas producidas = " + totalPiezas
-                    + ", cantidad de puestas en funcionamiento = " + solucion.getMejorCantidadMaquinas());
+            sb.append("Total de piezas producidas..........: ").append(totalPiezas).append("\n");
+            sb.append("Cantidad de máquinas utilizadas.....: ").append(totalMaquinas).append("\n");
         }
 
-        System.out.println("Cantidad de candidatos considerados: " + candidatosConsiderados);
+        sb.append("Candidatos considerados.............: ").append(candidatosConsiderados).append("\n");
+        System.out.println(sb);
     }
 }

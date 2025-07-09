@@ -1,56 +1,44 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
+
+import java.nio.file.Path;
 import java.util.List;
 
 import algoritmos.Backtracking;
 import algoritmos.Greedy;
 import modelo.Maquina;
+import utils.LectorArchivo;
 
 public class Main {
 
+    private static final Path ARCHIVO_DATOS = Path.of("caso1.txt");
+
     public static void main(String[] args) {
-        String archivo = "datos.txt"; // Archivo con los datos
-        int objetivo = 0;
-        List<Maquina> maquinas = new ArrayList<>();
+        try {
+            List<String> lineas = LectorArchivo.leerArchivo(ARCHIVO_DATOS.toString());
 
-        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
-            String linea = br.readLine();
-
-            if (linea != null) {
-                objetivo = Integer.parseInt(linea.trim());
+            if (lineas.isEmpty()) {
+                System.err.println("El archivo está vacío o no tiene datos válidos.");
+                return;
             }
 
-            maquinas = cargarMaquinas(br);
+            int objetivo = Integer.parseInt(lineas.get(0).trim());
+            List<Maquina> maquinas = LectorArchivo.parsearMaquinas(lineas.subList(1, lineas.size()));
 
-        } catch (IOException e) {
-            System.err.println("Error leyendo el archivo: " + e.getMessage());
-            return;
-        }
-
-        Backtracking backtrackingSolver = new Backtracking(maquinas);
-        backtrackingSolver.resolver(objetivo);
-
-        Greedy greedySolver = new Greedy(maquinas);
-        greedySolver.resolver(objetivo);
-    }
-
-    // Método para cargar las máquinas
-    public static List<Maquina> cargarMaquinas(BufferedReader br) throws IOException {
-        List<Maquina> maquinas = new ArrayList<>();
-        String linea;
-        while ((linea = br.readLine()) != null) {
-            linea = linea.trim();
-            if (!linea.isEmpty()) {
-                String[] partes = linea.split(",");
-                if (partes.length == 2) {
-                    String nombre = partes[0].trim();
-                    int piezas = Integer.parseInt(partes[1].trim());
-                    maquinas.add(new Maquina(nombre, piezas));
-                }
+            if (maquinas.isEmpty()) {
+                System.err.println("No se encontraron máquinas válidas en el archivo.");
+                return;
             }
+
+            System.out.println("==========================================\n");
+
+            // Ejecutar Backtracking
+            new Backtracking(maquinas).resolver(objetivo);
+            // Ejecutar Greedy
+            new Greedy(maquinas).resolver(objetivo);
+
+            System.out.println("==========================================\n");
+
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
-        return maquinas;
     }
 }
